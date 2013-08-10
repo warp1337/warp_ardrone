@@ -1,0 +1,9 @@
+## INFO ##
+
+In order to calibrate the ARDRONE cameras, copy these files to:
+
+---> /home/YOUR_USER/.ros/camera_info/*.yaml <---
+
+Why? See:
+
+---> http://www.ros.org/wiki/camera_calibration/Tutorials/MonocularCalibration <---

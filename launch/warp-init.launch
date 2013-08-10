@@ -1,0 +1,101 @@
+<launch>
+
+<!---
+Copyright (c) 2012, Falkor Systems, Inc.  All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+Redistributions of source code must retain the above copyright notice,
+this list of conditions and the following disclaimer.  Redistributions
+in binary form must reproduce the above copyright notice, this list of
+conditions and the following disclaimer in the documentation and/or
+other materials provided with the distribution.  THIS SOFTWARE IS
+PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+  <node name="ardrone_driver" pkg="ardrone_autonomy" type="ardrone_driver" output="screen" clear_params="true">
+	<param name="outdoor" value="1" />
+	<param name="flight_without_shell" value="0" />
+	<param name="navdata_demo" value="0" />
+	<param name="altitude_max" value="5000" />
+        <param name="altitude_min" value="50" />
+	<param name="tf_prefix" value="dr0ne" />
+	
+	<!-- <param name="max_bitrate" value="4000" />
+	<param name="bitrate" value="4000" />
+    <param name="euler_angle_max" value="0.21" />
+    <param name="control_vz_max" value="700" />
+	<param name="control_yaw" value="1.75" />
+	<param name="detect_type" value="10" />
+	<param name="enemy_colors" value="3" />
+	<param name="detections_select_h" value="32" />
+	<param name="detections_select_v_hsync" value="128" />
+	<param name="enemy_without_shell" value="0" />
+	<param name="do_imu_caliberation" value="false" /> -->
+        
+    <!-- Covariance Values (3x3 matrices reshaped to 1x9)-->
+    <rosparam param="cov/imu_la">[0.1, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.1]</rosparam>
+    <rosparam param="cov/imu_av">[1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]</rosparam>
+    <rosparam param="cov/imu_or">[1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 100000.0]</rosparam>
+
+    <!-- Enables the new-style, full information navdata packets. If not specified, defaults to FALSE -->
+	<param name="enable_navdata_demo" value="false" />
+	<param name="enable_navdata_wifi" value="true" />
+	
+	<!-- <param name="enable_navdata_time" value="true" />
+	<param name="enable_navdata_raw_measures" value="true" />
+	<param name="enable_navdata_phys_measures" value="true" />
+	<param name="enable_navdata_gyros_offsets" value="true" />
+	<param name="enable_navdata_euler_angles" value="true" />
+	<param name="enable_navdata_references" value="true" />
+	<param name="enable_navdata_trims" value="true" />
+	<param name="enable_navdata_rc_references" value="true" />
+	<param name="enable_navdata_pwm" value="true" />
+	<param name="enable_navdata_altitude" value="true" />
+	<param name="enable_navdata_vision_raw" value="true" />
+	<param name="enable_navdata_vision_of" value="true" />
+	<param name="enable_navdata_vision" value="true" />
+	<param name="enable_navdata_vision_perf" value="true" />
+	<param name="enable_navdata_trackers_send" value="false" />
+	<param name="enable_navdata_vision_detect" value="false" />
+	<param name="enable_navdata_watchdog" value="true" />
+	<param name="enable_navdata_adc_data_frame" value="true" />
+	<param name="enable_navdata_video_stream" value="false" />
+	<param name="enable_navdata_games" value="false" />
+	<param name="enable_navdata_pressure_raw" value="true" />
+	<param name="enable_navdata_magneto" value="true" />
+	<param name="enable_navdata_wind_speed" value="true" />
+	<param name="enable_navdata_kalman_pressure" value="true" />
+	<param name="enable_navdata_hdvideo_stream" value="true" />
+	<param name="enable_navdata_zimmu_3000" value="true" /> -->
+
+	<!-- Tunes the speed at which the ros loop runs, and thus, the rate at which navdata is published -->
+	<param name="looprate" value="50" />
+
+	<!-- Do we want to publish new-style navdata when received (true), or every time the ros-loop runs (false)? -->
+	<!-- Does not affect legacy navdata, which is always published at ros-loop rate -->
+	<!-- <param name="realtime_navdata" value="true" />
+	<param name="realtime_video" value="true" /> -->
+  </node>
+
+  <node name="joy_node" pkg="joy" type="joy_node" >
+  	<param name="dev" value="/dev/input/js0" />
+  </node>
+
+  <node name="warp_pid" pkg="warp_ardrone" type="warp_ardrone_pid_control.py" output="screen" />
+  
+  <node name="warp_manual" pkg="warp_ardrone" type="warp_manual_control.py" output="screen" />
+
+</launch>
